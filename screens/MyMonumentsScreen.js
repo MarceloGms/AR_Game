@@ -13,6 +13,8 @@ import TorreDeBelem from "../assets/TorreDeBelem.jpg";
 import MosteiroDaBatalha from "../assets/MosteiroDaBatalha.jpg";
 import TorreEiffel from "../assets/TorreEiffel.jpg";
 import Colosseum from "../assets/Colosseum.jpeg";
+import ArcoDoTriunfo from "../assets/ArcoDoTriunfo.jpg";
+import PadraoDosDescobrimentos from "../assets/PadraoDosDescobrimentos.jpg";
 
 import BackButton from "../components/BackButton";
 import MonumentInfoScreen from "./MonumentInfoScreen";
@@ -53,6 +55,22 @@ export default function MyMonuments() {
         image: Colosseum,
         description:
           "The Colosseum is an elliptical amphitheatre in the centre of the city of Rome, Italy, the largest ever built in the Roman Empire. It is considered one of the greatest works of Roman architecture and Roman engineering and is the largest amphitheatre in the world. The Colosseum could hold, it is estimated, between 50,000 and 80,000 spectators, having an average audience of some 65,000; it was used for gladiatorial contests and public spectacles such as animal hunts, executions, re-enactments of famous battles, and dramas based on Classical mythology. The building ceased to be used for entertainment in the early medieval era. It was later reused for such purposes as housing, workshops, quarters for a religious order, a fortress, a quarry, and a Christian shrine.",
+      },
+    ],
+    [
+      {
+        id: 5,
+        name: "Arco do Triunfo",
+        image: ArcoDoTriunfo,
+        description:
+          "The Arc de Triomphe de l'Étoile is one of the most famous monuments in Paris, France, standing at the western end of the Champs-Élysées at the centre of Place Charles de Gaulle, formerly named Place de l'Étoile—the étoile or 'star' of the juncture formed by its twelve radiating avenues. The location of the arc and the plaza is shared between three arrondissements, 16th (south and west), 17th (north), and 8th (east). The Arc de Triomphe honours those who fought and died for France in the French Revolutionary and Napoleonic Wars, with the names of all French victories and generals inscribed on its inner and outer surfaces. Beneath its vault lies the Tomb of the Unknown Soldier from World War I. As the central cohesive element of the Axe historique (historic axis, a sequence of monuments and grand thoroughfares on a route running from the courtyard of the Louvre to the Grande Arche de la Défense), the Arc de Triomphe was designed by Jean Chalgrin in 1806 and its iconographic program pitted heroically nude French youths against bearded Germanic warriors in chain mail. It set the tone for public monuments with triumphant patriotic messages.",
+      },
+      {
+        id: 6,
+        name: "Padrão dos Descobrimentos",
+        image: PadraoDosDescobrimentos,
+        description:
+          "The Monument to the Discoveries is a monument on the northern bank of the Tagus River estuary, in the civil parish of Santa Maria de Belém, Lisbon. Located along the river where ships departed to explore and trade with India and the Orient, the monument celebrates the Portuguese Age of Discovery (or Age of Exploration) during the 15th and 16th centuries. The monument was conceived in 1939 by Portuguese architect José Ângelo Cottinelli Telmo, and sculptor Leopoldo de Almeida, as a temporary beacon during the Portuguese World Fair opening in June 1940. The Monument to the Discoveries represents a romantic idealisation of the Portuguese past that was typical during the regime of Salazar. The original monument was built with perishable materials, but it was rebuilt in concrete in 1960, in time for the commemoration of the 500th anniversary of the death of Henry the Navigator, the sponsor of the Portuguese Discoveries. In 1960, the original figures were replaced with new ones, representing other figures from the Portuguese Age of Discovery.",
       },
     ],
   ];
