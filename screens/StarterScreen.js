@@ -28,10 +28,12 @@ export default function StarterScreen() {
     [
       {
         id: 1,
-        name: "Torre de Belem",
-        image: TorreDeBelem,
+        name: "Sé Nova de Coimbra",
+        image: "Sé Nova de Coimbra",
         description:
-          "The Tower of Belém is a fortified tower located in the civil parish of Santa Maria de Belém in the municipality of Lisbon, Portugal. It is a UNESCO World Heritage Site (along with the nearby Jerónimos Monastery) because of the significant role it played in the Portuguese maritime discoveries of the era of the Age of Discoveries. The tower was commissioned by King John II to be part of a defense system at the mouth of the Tagus river and a ceremonial gateway to Lisbon. The tower was built in the early 16th century and is a prominent example of the Portuguese Manueline style, but it also incorporates hints of other architectural styles. The structure was built from lioz limestone and is composed of a bastion and a 30-metre (98.4 ft), four-storey tower. It has incorrectly been stated that the tower was built in the middle of the Tagus and now sits near the shore because the river was redirected after the 1755 Lisbon earthquake.",
+          "The New Cathedral of Coimbra (Portuguese: Sé Nova de Coimbra) or the Cathedral of the Holy Name of Jesus is the current bishopric seat of the city of Coimbra, in Portugal. The Cathedral is located near the historical University of Coimbra in the upper part of the town, and is classified as a National Monument. The New Cathedral is the only one of the Portuguese cathedrals belonging to the Renaissance and one of the first from this period to be built in Portugal. Its building took place in the second half of the 16th century, and it was consecrated in 1698. The construction of the cathedral was begun in 1598, on the site of the former mediaeval cathedral, and was finished in the 18th century. The cathedral has a Latin cross floor plan, a nave, lateral chapels, a transept, a main chapel, a choir, a sacristy, and a bell tower. The main façade has a portal with sculptural decoration and a rose window. The interior is covered by barrel vaulting and presents a main chapel with a dome.",
+        latitude: 40.2105,
+        longitude: -8.4267,
       },
       {
         id: 2,
@@ -97,8 +99,8 @@ export default function StarterScreen() {
                     onPress={() => {
                       navigation.navigate("GameScreen", {
                         name: monument.name,
-                        image: monument.image,
-                        description: monument.description,
+                        latitude: monument.latitude,
+                        longitude: monument.longitude,
                       });
                     }}
                     className="flex-1"
