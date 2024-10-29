@@ -1,12 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, Dimensions } from "react-native";
+import { View, Dimensions, StyleSheet } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
 import * as Location from "expo-location";
-import { StyleSheet } from "react-native";
 import BackButton from "../components/BackButton";
 import { useNavigation } from "@react-navigation/native";
-
-const { width, height } = Dimensions.get("window");
 
 export default function GameScreen({ route }) {
   const navigation = useNavigation();
@@ -153,7 +150,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   map: {
-    width: "100%",
-    height: "100%",
+    ...StyleSheet.absoluteFillObject,
   },
 });
