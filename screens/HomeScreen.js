@@ -31,7 +31,7 @@ export default function HomeScreen() {
         <View className="flex space-y-4 ">
           <View className="min-w-full ">
             <Button
-              onPress={() => navigation.navigate("Home")}
+              onPress={() => navigation.navigate("StarterScreen")}
               title="Start Game"
             />
           </View>
