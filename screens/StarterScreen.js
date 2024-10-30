@@ -20,6 +20,7 @@ import ArcoDoTriunfo from "../assets/ArcoDoTriunfo.jpg";
 import PadraoDosDescobrimentos from "../assets/PadraoDosDescobrimentos.jpg";
 
 import BackButton from "../components/BackButton";
+import StartButton from "../components/StartButton";
 
 const { width, height } = Dimensions.get("window");
 
@@ -92,7 +93,7 @@ export default function StarterScreen() {
 					<View className="gap-y-5 min-w-full">
 						<View className="flex justify-center items-center">
 							<Text className="text-3xl text-center text-zinc-100 font-bold">
-								Starter Screen
+								Choose a monument
 							</Text>
 						</View>
 
@@ -134,18 +135,21 @@ export default function StarterScreen() {
 										<Text className="text-xl font-bold text-center mb-4">
 											{selectedMonument.name}
 										</Text>
-										<Button
-											title="Start"
-											onPress={() => {
-												navigation.navigate("GameScreen", {
-													name: selectedMonument.name,
-													latitude: selectedMonument.latitude,
-													longitude: selectedMonument.longitude,
-												});
-												closeModal();
-											}}
-										/>
-										<Button title="Close" onPress={closeModal} color="red" />
+										<View className="mt-4">
+											<StartButton
+												onPress={() => {
+													closeModal();
+													navigation.navigate("GameScreen", {
+														monument: selectedMonument,
+														latitude: selectedMonument.latitude,
+														longitude: selectedMonument.longitude,
+													});
+												}}
+											/>
+										</View>
+										<View className="mt-2">
+											<BackButton onPress={closeModal} icon="arrow-back" />
+										</View>
 									</>
 								)}
 							</View>
