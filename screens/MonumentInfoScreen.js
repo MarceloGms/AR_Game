@@ -8,8 +8,8 @@ export default function MonumentInfoScreen({ route }) {
   const { name, image, description } = route.params;
 
   return (
-    <SafeAreaView className="bg-[#5c2f00]">
-      <ScrollView className="px-4">
+    <SafeAreaView className="bg-[#5c2f00] ">
+      <ScrollView className="px-4 min-h-screen">
         <View className="w-full h-72 py-4">
           <Image
             source={image}
@@ -30,7 +30,7 @@ export default function MonumentInfoScreen({ route }) {
           </Text>
         </View>
 
-        <View className="py-4 w-12">
+        <View className="py-4 w-12 bottom-0">
           <BackButton
             className="block"
             onPress={() => navigation.goBack()}
