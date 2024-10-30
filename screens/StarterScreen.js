@@ -99,6 +99,7 @@ export default function StarterScreen() {
                             closeModal();
                             navigation.navigate("GameScreen", {
                               monument: selectedMonument,
+                              name: selectedMonument.name,
                               latitude: selectedMonument.latitude,
                               longitude: selectedMonument.longitude,
                             });

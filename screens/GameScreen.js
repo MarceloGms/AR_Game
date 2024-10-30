@@ -6,160 +6,162 @@ import BackButton from "../components/BackButton";
 import { useNavigation } from "@react-navigation/native";
 
 export default function GameScreen({ route }) {
-	const navigation = useNavigation();
+  const navigation = useNavigation();
+  const monumentCoordinates = useRef({
+    latitude: route.params.latitude,
+    longitude: route.params.longitude,
+  });
 
-	// Use useRef para armazenar monument_coordinates
-	const monumentCoordinates = useRef({
-		latitude: route.params.latitude,
-		longitude: route.params.longitude,
-	});
+  const [location, setLocation] = useState(null);
+  const [region, setRegion] = useState(null);
+  const [routeCoordinates, setRouteCoordinates] = useState([]);
+  const [checkpoints, setCheckpoints] = useState([]);
 
-	const [location, setLocation] = useState(null);
-	const [region, setRegion] = useState(null);
-	const [routeCoordinates, setRouteCoordinates] = useState([]); // Para armazenar as coordenadas da rota
+  let monumentName = route.params.name;
+  monumentName = monumentName.replace(/\s/g, "").toLowerCase();
+  console.log("MONUMENT NAME ", monumentName);
 
-	useEffect(() => {
-		let locationSubscription;
+  useEffect(() => {
+    let locationSubscription;
 
-		(async () => {
-			const { status } = await Location.requestForegroundPermissionsAsync();
-			if (status !== "granted") {
-				console.log("Permission to access location was denied");
-				return;
-			}
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+        return;
+      }
 
-			// Obter posição inicial e definir como região do mapa
-			const initialLocation = await Location.getCurrentPositionAsync({});
-			setLocation(initialLocation.coords);
-			setRegion({
-				latitude: initialLocation.coords.latitude,
-				longitude: initialLocation.coords.longitude,
-				latitudeDelta: 0.01,
-				longitudeDelta: 0.01,
-			});
+      const initialLocation = await Location.getCurrentPositionAsync({});
+      setLocation(initialLocation.coords);
+      setRegion({
+        latitude: initialLocation.coords.latitude,
+        longitude: initialLocation.coords.longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      });
 
-			// Obter a rota
-			await fetchRoute(initialLocation.coords, monumentCoordinates.current);
-			locationSubscription = await Location.watchPositionAsync(
-				{
-					accuracy: Location.Accuracy.High,
-					timeInterval: 5000,
-					distanceInterval: 1,
-				},
-				(newLocation) => {
-					setLocation(newLocation.coords);
-				}
-			);
-		})();
+      await fetchRoute(initialLocation.coords, monumentCoordinates.current);
 
-		return () => {
-			if (locationSubscription) {
-				locationSubscription.remove();
-			}
-		};
-	}, []);
+      locationSubscription = await Location.watchPositionAsync(
+        {
+          accuracy: Location.Accuracy.High,
+          timeInterval: 5000,
+          distanceInterval: 1,
+        },
+        (newLocation) => {
+          setLocation(newLocation.coords);
+        }
+      );
+    })();
 
-	const fetchRoute = async (start, end) => {
-		console.log("START params", start);
-		console.log("END params", end);
+    return () => {
+      if (locationSubscription) {
+        locationSubscription.remove();
+      }
+    };
+  }, []);
 
-		const API_KEY = "5b3ce3597851110001cf6248b348401dfa20456aacf41374d55da08d"; // Insira sua chave de API aqui
-		const url = `https://api.openrouteservice.org/v2/directions/driving-car?start=${start.longitude},${start.latitude}&end=${end.longitude},${end.latitude}`;
+  const fetchRoute = async (start, end) => {
+    const API_KEY = "5b3ce3597851110001cf6248b348401dfa20456aacf41374d55da08d";
+    const url = `https://api.openrouteservice.org/v2/directions/driving-car?start=${start.longitude},${start.latitude}&end=${end.longitude},${end.latitude}`;
 
-		try {
-			const response = await fetch(url, {
-				headers: {
-					Authorization: API_KEY,
-					"Content-Type": "application/json",
-				},
-			});
+    try {
+      const response = await fetch(url, {
+        headers: {
+          Authorization: API_KEY,
+          "Content-Type": "application/json",
+        },
+      });
 
-			if (!response.ok) {
-				const errorData = await response.json();
-				console.error("API Error Response:", errorData);
-				throw new Error("Network response was not ok");
-			}
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("API Error Response:", errorData);
+        throw new Error("Network response was not ok");
+      }
 
-			const data = await response.json();
-			console.log("API Response Data:", data);
+      const data = await response.json();
+      if (data.features && data.features.length > 0) {
+        const coords = data.features[0].geometry.coordinates.map((coord) => ({
+          latitude: coord[1],
+          longitude: coord[0],
+        }));
+        setRouteCoordinates(coords);
 
-			// Extrair coordenadas da rota
-			if (data.features && data.features.length > 0) {
-				const coords = data.features[0].geometry.coordinates.map((coord) => ({
-					latitude: coord[1],
-					longitude: coord[0],
-				}));
-				setRouteCoordinates(coords); // Atualizar as coordenadas da rota
-			} else {
-				console.log("No routes found");
-			}
-		} catch (error) {
-			console.error("Error fetching route:", error);
-		}
-	};
+        // Adiciona checkpoints com as letras do nome do monumento
+        const checkpointPositions = distributeCheckpoints(coords, monumentName);
+        setCheckpoints(checkpointPositions);
+      } else {
+        console.log("No routes found");
+      }
+    } catch (error) {
+      console.error("Error fetching route:", error);
+    }
+  };
 
-	return (
-		<View style={styles.container}>
-			{region && (
-				<MapView
-					style={styles.map}
-					region={region}
-					onRegionChangeComplete={(newRegion) => setRegion(newRegion)}
-					camera={{
-						center: {
-							latitude: location.latitude,
-							longitude: location.longitude,
-						},
-						pitch: 45, // Tilt angle
-						heading: 0, // Camera heading
-						altitude: 1000, // Camera altitude
-						zoom: 15, // Zoom level
-					}}
-				>
-					{location && (
-						<Marker
-							coordinate={{
-								latitude: location.latitude,
-								longitude: location.longitude,
-							}}
-							title="Minha Localização"
-							description="Estou aqui"
-						/>
-					)}
+  // Função para distribuir os checkpoints
+  const distributeCheckpoints = (coords, name) => {
+    const numCheckpoints = name.length;
+    const interval = Math.floor((coords.length - 2) / (numCheckpoints - 2));
 
-					{/* Marker do monumento */}
-					<Marker
-						coordinate={monumentCoordinates.current}
-						title="Monumento"
-						description="Destino"
-					/>
+    return name.split("").map((letter, index) => {
+      if (index === 0) {
+        // Primeiro checkpoint no início da rota
+        return { coordinate: coords[0], label: letter };
+      }
+      if (index === numCheckpoints - 1) {
+        // Último checkpoint no final da rota (destino)
+        return { coordinate: coords[coords.length - 1], label: letter };
+      }
 
-					{/* Adicionar a Polyline*/}
-					{routeCoordinates.length > 0 && (
-						<Polyline
-							coordinates={routeCoordinates}
-							strokeColor="#5c2f00"
-							strokeWidth={6}
-						/>
-					)}
-				</MapView>
-			)}
+      // Checkpoints intermediários
+      return { coordinate: coords[index * interval], label: letter };
+    });
+  };
 
-			<View className="px-4 absolute bottom-8">
-				<BackButton
-					onPress={() => navigation.goBack()}
-					icon="arrow-back-outline"
-				/>
-			</View>
-		</View>
-	);
+  return (
+    <View style={styles.container}>
+      {region && (
+        <MapView
+          style={styles.map}
+          region={region}
+          onRegionChangeComplete={(newRegion) => setRegion(newRegion)}
+          initialRegion={region}
+        >
+          {routeCoordinates.length > 0 && (
+            <Polyline
+              coordinates={routeCoordinates}
+              strokeColor="#5c2f00"
+              strokeWidth={6}
+            />
+          )}
+
+          {/* Renderizar os checkpoints com letras */}
+          {checkpoints.map((checkpoint, index) => (
+            <Marker
+              key={checkpoint.latitude}
+              coordinate={checkpoint.coordinate}
+              title={checkpoint.label}
+              pinColor="#f4b400"
+            />
+          ))}
+        </MapView>
+      )}
+
+      <View className="px-4 absolute bottom-8">
+        <BackButton
+          onPress={() => navigation.goBack()}
+          icon="arrow-back-outline"
+        />
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
-	map: {
-		...StyleSheet.absoluteFillObject,
-	},
+  container: {
+    flex: 1,
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
 });
