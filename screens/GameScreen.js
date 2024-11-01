@@ -1,7 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, Dimensions, StyleSheet } from "react-native";
+import {
+  View,
+  Dimensions,
+  StyleSheet,
+  Pressable,
+  SafeAreaView,
+} from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
 import * as Location from "expo-location";
+import Svg, { Circle, Text } from "react-native-svg"; // Importação do SVG
 import BackButton from "../components/BackButton";
 import { useNavigation } from "@react-navigation/native";
 
@@ -118,6 +125,8 @@ export default function GameScreen({ route }) {
     });
   };
 
+  console.log("aaaaaaa", monumentName);
+
   return (
     <View style={styles.container}>
       {region && (
@@ -135,14 +144,30 @@ export default function GameScreen({ route }) {
             />
           )}
 
-          {/* Renderizar os checkpoints com letras */}
-          {checkpoints.map((checkpoint, index) => (
-            <Marker
-              key={checkpoint.latitude}
-              coordinate={checkpoint.coordinate}
-              title={checkpoint.label}
-              pinColor="#f4b400"
-            />
+          {/* Renderizar os checkpoints com letras*/}
+          {checkpoints.map((checkpoint) => (
+            <Pressable
+              key={`${checkpoint.coordinate.latitude}-${checkpoint.coordinate.longitude}`}
+              onPress={() => {
+                console.log("Checkpoint", checkpoint);
+              }}
+            >
+              <Marker coordinate={checkpoint.coordinate} pinColor="#f4b400">
+                <Svg height="50" width="50">
+                  <Circle cx="25" cy="25" r="20" fill="#f4b400" />
+                  <Text
+                    x="25"
+                    y="30"
+                    textAnchor="middle"
+                    fontSize="16"
+                    fontWeight="bold"
+                    fill="white"
+                  >
+                    {checkpoint.label.toUpperCase()}
+                  </Text>
+                </Svg>
+              </Marker>
+            </Pressable>
           ))}
         </MapView>
       )}

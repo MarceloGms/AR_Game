@@ -13,11 +13,11 @@ export default function AppNavigation() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Login"
           options={{ headerShown: false }}
           component={LoginScreen}
-        />
+        /> */}
         <Stack.Screen
           name="Home"
           options={{ headerShown: false }}
