@@ -144,30 +144,31 @@ export default function GameScreen({ route }) {
             />
           )}
 
-          {/* Renderizar os checkpoints com letras*/}
+          {/* Render checkpoints with letters */}
+          
           {checkpoints.map((checkpoint) => (
-            <Pressable
+            <Marker
               key={`${checkpoint.coordinate.latitude}-${checkpoint.coordinate.longitude}`}
+              coordinate={checkpoint.coordinate}
               onPress={() => {
                 console.log("Checkpoint", checkpoint);
+                navigation.navigate("ExerciseScreen"); 
               }}
             >
-              <Marker coordinate={checkpoint.coordinate} pinColor="#f4b400">
-                <Svg height="50" width="50">
-                  <Circle cx="25" cy="25" r="20" fill="#f4b400" />
-                  <Text
-                    x="25"
-                    y="30"
-                    textAnchor="middle"
-                    fontSize="16"
-                    fontWeight="bold"
-                    fill="white"
-                  >
-                    {checkpoint.label.toUpperCase()}
-                  </Text>
-                </Svg>
-              </Marker>
-            </Pressable>
+              <Svg height="50" width="50">
+                <Circle cx="25" cy="25" r="20" fill="#f4b400" />
+                <Text
+                  x="25"
+                  y="30"
+                  textAnchor="middle"
+                  fontSize="16"
+                  fontWeight="bold"
+                  fill="white"
+                >
+                  {checkpoint.label.toUpperCase()}
+                </Text>
+              </Svg>
+            </Marker>
           ))}
         </MapView>
       )}
