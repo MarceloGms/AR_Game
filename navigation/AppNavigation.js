@@ -6,6 +6,7 @@ import MyMonuments from "../screens/MyMonumentsScreen";
 import MonumentInfoScreen from "../screens/MonumentInfoScreen";
 import StarterScreen from "../screens/StarterScreen";
 import GameScreen from "../screens/GameScreen";
+import ExerciseScreen from "../screens/ExerciseScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +44,11 @@ export default function AppNavigation() {
           options={{ headerShown: false }}
           component={GameScreen}
         />
+        <Stack.Screen
+        name="ExerciseScreen"
+        options={{ headerShown: false }}
+        component={ExerciseScreen}
+      />
       </Stack.Navigator>
     </NavigationContainer>
   );
