@@ -7,9 +7,10 @@ import {
   StyleSheet,
   Button,
 } from "react-native";
+
 import { useNavigation } from "@react-navigation/native";
 import TimerBar from "../components/TimerBar";
-import jumpingJackImg from "../assets/jumpingJack.jpg";
+import jumpingJackImg from "../assets/jumpingJack1.jpg";
 
 export default function ExerciseScreen() {
   const [challengeStarted, setChallengeStarted] = useState(false);

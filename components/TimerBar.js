@@ -80,4 +80,5 @@ const styles = StyleSheet.create({
     width: '80%',
     marginTop: 20,
   },
+  
 });

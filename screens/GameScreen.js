@@ -145,6 +145,7 @@ export default function GameScreen({ route }) {
           )}
 
           {/* Render checkpoints with letters */}
+          
           {checkpoints.map((checkpoint) => (
             <Marker
               key={`${checkpoint.coordinate.latitude}-${checkpoint.coordinate.longitude}`}
