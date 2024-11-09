@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet } from "react-native";
 
-export default function TimerBar() {
+export default function TimerBar({ onTimerEnd }) {
   const [timeLeft, setTimeLeft] = useState(30); // 30 seconds countdown
   const [widthPercentage, setWidthPercentage] = useState(100); // Full width at start
-  const navigation = useNavigation();
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -15,6 +13,7 @@ export default function TimerBar() {
 
         if (newTime === 0) {
           clearInterval(intervalId); // Stop the interval
+          if (onTimerEnd) onTimerEnd(); // Call onTimerEnd when the timer reaches zero
         }
 
         return newTime;
@@ -22,63 +21,17 @@ export default function TimerBar() {
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [onTimerEnd]); // Dependency array includes onTimerEnd to avoid infinite loop
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.bar, { width: `${widthPercentage}%` }]} />
-      <Text style={styles.timerText}>{timeLeft} s</Text>
-
-      {/* Show button when timer reaches 0 */}
-      {timeLeft === 0 && (
-        <View style={styles.buttonContainer}>
-          <Button
-            title="Return to Map"
-            onPress={() => {
-              closeModal();
-              navigation.navigate("GameScreen", {
-                monument: selectedMonument,
-                name: selectedMonument.name,
-                latitude: selectedMonument.latitude,
-                longitude: selectedMonument.longitude,
-              });
-            }}
-          />
-        </View>
-      )}
+    <View className="w-4/5 h-8 bg-red-500 rounded-full mt-5 relative justify-center items-center">
+      <View
+        style={[{ width: `${widthPercentage}%` }]}
+        className="absolute top-0 left-0 h-full bg-green-500 rounded-full"
+      />
+      <Text className="text-white font-bold text-lg text-center">
+        {timeLeft} s
+      </Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    backgroundColor: '#FF0000',
-    borderRadius: 10,
-    marginTop: 20,
-    position: 'relative',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  bar: {
-    height: '100%',
-    backgroundColor: '#4caf50', // green bar color
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    borderRadius: 10,
-  },
-  timerText: {
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: 16,
-    color: '#fff',
-  },
-  buttonContainer: {
-    position: 'absolute',
-    bottom: -50, // Position the button below the timer
-    width: '80%',
-    marginTop: 20,
-  },
-  
-});

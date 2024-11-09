@@ -1,11 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import {
-  View,
-  Dimensions,
-  StyleSheet,
-  Pressable,
-  SafeAreaView,
-} from "react-native";
+import { View, Dimensions, StyleSheet } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
 import * as Location from "expo-location";
 import Svg, { Circle, Text } from "react-native-svg"; // Importação do SVG
@@ -23,6 +17,8 @@ export default function GameScreen({ route }) {
   const [region, setRegion] = useState(null);
   const [routeCoordinates, setRouteCoordinates] = useState([]);
   const [checkpoints, setCheckpoints] = useState([]);
+  const [completedCheckpoints, setCompletedCheckpoints] = useState([]);
+  const [lastCompletedCheckpoint, setLastCompletedCheckpoint] = useState(-1);
 
   let monumentName = route.params.name;
   monumentName = monumentName.replace(/\s/g, "").toLowerCase();
@@ -94,7 +90,7 @@ export default function GameScreen({ route }) {
         }));
         setRouteCoordinates(coords);
 
-        // Adiciona checkpoints com as letras do nome do monumento
+        // Add checkpoints with letters from the monument name
         const checkpointPositions = distributeCheckpoints(coords, monumentName);
         setCheckpoints(checkpointPositions);
       } else {
@@ -105,27 +101,45 @@ export default function GameScreen({ route }) {
     }
   };
 
-  // Função para distribuir os checkpoints
+  // Function to distribute the checkpoints
   const distributeCheckpoints = (coords, name) => {
     const numCheckpoints = name.length;
     const interval = Math.floor((coords.length - 2) / (numCheckpoints - 2));
 
     return name.split("").map((letter, index) => {
       if (index === 0) {
-        // Primeiro checkpoint no início da rota
-        return { coordinate: coords[0], label: letter };
+        // First checkpoint at the start of the route
+        return { coordinate: coords[0], label: letter, completed: false };
       }
       if (index === numCheckpoints - 1) {
-        // Último checkpoint no final da rota (destino)
-        return { coordinate: coords[coords.length - 1], label: letter };
+        // Last checkpoint at the end of the route (destination)
+        return {
+          coordinate: coords[coords.length - 1],
+          label: letter,
+          completed: false,
+        };
       }
 
-      // Checkpoints intermediários
-      return { coordinate: coords[index * interval], label: letter };
+      // Intermediate checkpoints
+      return {
+        coordinate: coords[index * interval],
+        label: letter,
+        completed: false,
+      };
     });
   };
 
-  console.log("aaaaaaa", monumentName);
+  // Function to mark a checkpoint as completed
+  const markCheckpointAsCompleted = (checkpoint) => {
+    //verify if its the next checkpoint after the last completed
+    const nextCheckpointIndex = completedCheckpoints.length;
+    if (checkpoints[nextCheckpointIndex]?.label === checkpoint.label) {
+      setCompletedCheckpoints((prevCompleted) => [
+        ...prevCompleted,
+        checkpoint,
+      ]);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -145,31 +159,55 @@ export default function GameScreen({ route }) {
           )}
 
           {/* Render checkpoints with letters */}
-          
-          {checkpoints.map((checkpoint) => (
-            <Marker
-              key={`${checkpoint.coordinate.latitude}-${checkpoint.coordinate.longitude}`}
-              coordinate={checkpoint.coordinate}
-              onPress={() => {
-                console.log("Checkpoint", checkpoint);
-                navigation.navigate("ExerciseScreen"); 
-              }}
-            >
-              <Svg height="50" width="50">
-                <Circle cx="25" cy="25" r="20" fill="#f4b400" />
-                <Text
-                  x="25"
-                  y="30"
-                  textAnchor="middle"
-                  fontSize="16"
-                  fontWeight="bold"
-                  fill="white"
-                >
-                  {checkpoint.label.toUpperCase()}
-                </Text>
-              </Svg>
-            </Marker>
-          ))}
+          {checkpoints.map((checkpoint, index) => {
+            const isCompleted = completedCheckpoints.some(
+              (completedCheckpoint) =>
+                completedCheckpoint.coordinate.latitude ===
+                  checkpoint.coordinate.latitude &&
+                completedCheckpoint.coordinate.longitude ===
+                  checkpoint.coordinate.longitude
+            );
+
+            const isNextCheckpoint =
+              completedCheckpoints.length ===
+              checkpoints.findIndex((cp) => cp.label === checkpoint.label);
+
+            return (
+              <Marker
+                key={`${checkpoint.coordinate.latitude}-${checkpoint.coordinate.longitude}`}
+                coordinate={checkpoint.coordinate}
+                onPress={() => {
+                  if (!isCompleted && isNextCheckpoint) {
+                    markCheckpointAsCompleted(checkpoint);
+                    navigation.navigate("ExerciseScreen", {
+                      checkpointCoordinate: checkpoint.coordinate,
+                      monumentName: monumentName,
+                      checkpointIndex: checkpoint.label, // Pass checkpoint label to identify which one
+                    });
+                  }
+                }}
+              >
+                <Svg height="50" width="50">
+                  <Circle
+                    cx="25"
+                    cy="25"
+                    r="20"
+                    fill={isCompleted ? "#4caf50" : "#f4b400"} // Green if completed, Yellow if not
+                  />
+                  <Text
+                    x="25"
+                    y="30"
+                    textAnchor="middle"
+                    fontSize="16"
+                    fontWeight="bold"
+                    fill="white"
+                  >
+                    {checkpoint.label.toUpperCase()}
+                  </Text>
+                </Svg>
+              </Marker>
+            );
+          })}
         </MapView>
       )}
 

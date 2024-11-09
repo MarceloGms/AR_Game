@@ -47,12 +47,14 @@ export default function HomeScreen() {
               <Button
                 onPress={() => navigation.navigate("StarterScreen")}
                 title="Start Game"
+                bgColor="#f9a826b3"
               />
             </View>
             <View className="min-w-full">
               <Button
                 onPress={() => navigation.navigate("MyMonuments")}
                 title="My Monuments"
+                bgColor="#f9a826b3"
               />
             </View>
           </View>
