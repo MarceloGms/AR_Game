@@ -7,6 +7,7 @@ import ConfettiCannon from "react-native-confetti-cannon"; // Import confetti ca
 export default function EndScreen({ route }) {
   const navigation = useNavigation();
 
+  console.log("route.params", route.params.name);
   return (
     <SafeAreaView className="flex-1 items-center justify-center bg-[#f9a826b3] p-6">
       {/* Confetti Cannon Triggered on Load */}

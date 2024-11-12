@@ -8,6 +8,7 @@ import StarterScreen from "../screens/StarterScreen";
 import GameScreen from "../screens/GameScreen";
 import ExerciseScreen from "../screens/ExerciseScreen";
 import EndScreen from "../screens/EndScreen";
+import FindWordScreen from "../screens/FindWordScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -49,6 +50,11 @@ export default function AppNavigation() {
           name="EndScreen"
           options={{ headerShown: false }}
           component={EndScreen}
+        />
+        <Stack.Screen
+          name="FindWordScreen"
+          options={{ headerShown: false }}
+          component={FindWordScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

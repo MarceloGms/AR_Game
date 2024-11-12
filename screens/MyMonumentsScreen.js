@@ -70,7 +70,7 @@ export default function MyMonuments() {
             </View>
             <View className="px-4">
               <BackButton
-                onPress={() => navigation.goBack()}
+                onPress={() => navigation.navigate("HomeScreen")}
                 icon="arrow-back-outline"
               />
             </View>

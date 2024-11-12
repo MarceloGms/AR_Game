@@ -21,8 +21,9 @@ export default function ExerciseScreen({ route }) {
     setIsCompleted(true);
 
     if (lastCheckpoint) {
-      navigation.navigate("EndScreen", {
-        name: route.params.monumentName,
+      navigation.navigate("FindWordScreen", {
+        checkpoints: route.params.checkpoints,
+        monumentName: route.params.monumentName,
       }); // Navigate to EndScreen if this is the last checkpoint
     } else {
       // Otherwise, navigate back to the GameScreen

@@ -18,7 +18,6 @@ export default function GameScreen({ route }) {
   const [routeCoordinates, setRouteCoordinates] = useState([]);
   const [checkpoints, setCheckpoints] = useState([]);
   const [completedCheckpoints, setCompletedCheckpoints] = useState([]);
-  const [lastCompletedCheckpoint, setLastCompletedCheckpoint] = useState(-1);
 
   let monumentName = route.params.name;
   monumentName = monumentName.replace(/\s/g, "").toLowerCase();

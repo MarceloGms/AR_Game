@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -9,12 +9,39 @@ import {
 } from "react-native";
 import BackButton from "../components/BackButton";
 import { useNavigation } from "@react-navigation/native";
-import bgImg from "../assets/bgImg.jpg"; // Fixed import: No need for curly braces
+import bgImg from "../assets/bgImg.jpg";
+import monumentsData from "../components/MonumentsData";
 
 export default function MonumentInfoScreen({ route }) {
   const navigation = useNavigation();
 
-  const { name, image, description } = route.params;
+  const [name, setName] = useState("");
+  const [image, setImage] = useState(null);
+  const [description, setDescription] = useState("");
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    setName(route.params.name);
+    setImage(route.params.image);
+    setDescription(route.params.description);
+
+    if (!name || !image || !description) {
+      const formattedName = route.params.name.toLowerCase().replace(/\s+/g, ""); // format the received name
+
+      const monumentData = monumentsData
+        .flat()
+        .find(
+          (monument) =>
+            monument.name.toLowerCase().replace(/\s+/g, "") === formattedName
+        );
+
+      if (monumentData) {
+        setName(monumentData.name);
+        setImage(monumentData.image);
+        setDescription(monumentData.description);
+      }
+    }
+  }, [route.params.name, route.params.image, route.params.description]);
 
   return (
     <ImageBackground
@@ -25,9 +52,6 @@ export default function MonumentInfoScreen({ route }) {
         height: "100%",
       }}
       resizeMode="cover"
-      className="flex-1 justify-center items-center
-    min-h-screen
-    "
     >
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView
@@ -86,7 +110,7 @@ export default function MonumentInfoScreen({ route }) {
 
           <View style={{ paddingVertical: 16, alignSelf: "flex-start" }}>
             <BackButton
-              onPress={() => navigation.goBack()}
+              onPress={() => navigation.navigate("MyMonuments")}
               icon="arrow-back-outline"
             />
           </View>
