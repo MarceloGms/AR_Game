@@ -52,7 +52,7 @@ export default function MonumentInfoScreen({ route }) {
           <View style={{ marginBottom: 16 }}>
             <Text
               style={{
-                fontSize: 32,
+                fontSize: 36,
                 fontWeight: "bold",
                 textAlign: "center",
                 color: "#d1d5db",
@@ -75,7 +75,7 @@ export default function MonumentInfoScreen({ route }) {
           >
             <Text
               style={{
-                fontSize: 16,
+                fontSize: 20,
                 color: "#e5e7eb",
                 lineHeight: 24,
               }}

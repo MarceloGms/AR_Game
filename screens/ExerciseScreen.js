@@ -21,7 +21,9 @@ export default function ExerciseScreen({ route }) {
     setIsCompleted(true);
 
     if (lastCheckpoint) {
-      navigation.navigate("EndScreen"); // Navigate to EndScreen if this is the last checkpoint
+      navigation.navigate("EndScreen", {
+        name: route.params.monumentName,
+      }); // Navigate to EndScreen if this is the last checkpoint
     } else {
       // Otherwise, navigate back to the GameScreen
       navigation.navigate("GameScreen", {

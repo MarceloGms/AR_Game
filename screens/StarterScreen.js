@@ -23,15 +23,27 @@ export default function StarterScreen() {
   const navigation = useNavigation();
   const [selectedMonument, setSelectedMonument] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [dificulty, setDificulty] = useState(null);
 
   const openModal = (monument) => {
     setSelectedMonument(monument);
     setModalVisible(true);
+    getDificulty(monument);
   };
 
   const closeModal = () => {
     setModalVisible(false);
     setSelectedMonument(null);
+  };
+
+  const getDificulty = (monument) => {
+    if (monument.name.length < 10) {
+      setDificulty("EASY");
+    } else if (monument.name.length >= 10 && monument.name.length < 15) {
+      setDificulty("MEDIUM");
+    } else {
+      setDificulty("HARD");
+    }
   };
 
   return (
@@ -48,8 +60,8 @@ export default function StarterScreen() {
         <View>
           <SafeAreaView className="flex-1 justify-between min-h-screen items-start">
             <View className="gap-y-5 min-w-full">
-              <View className="flex justify-center items-center">
-                <Text className="text-3xl text-center text-[#f9a826b3] font-bold">
+              <View className="flex justify-center items-center py-4">
+                <Text className="text-4xl text-center text-[#f9a826b3] font-bold">
                   Choose a monument
                 </Text>
               </View>
@@ -102,7 +114,7 @@ export default function StarterScreen() {
                       />
                       <View className="flex flex-col justify-center items-center min-w-full pt-20 gap-y-4">
                         <Text className="text-2xl text-zinc-200 font-bold text-center ">
-                          {selectedMonument.name}
+                          {dificulty}
                         </Text>
                         <View className="min-w-full">
                           <StartButton

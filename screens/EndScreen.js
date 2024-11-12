@@ -4,13 +4,19 @@ import { useNavigation } from "@react-navigation/native";
 import Button from "../components/Button"; // Custom Button component
 import ConfettiCannon from "react-native-confetti-cannon"; // Import confetti cannon
 
-export default function EndScreen() {
+export default function EndScreen({ route }) {
   const navigation = useNavigation();
 
   return (
     <SafeAreaView className="flex-1 items-center justify-center bg-[#f9a826b3] p-6">
       {/* Confetti Cannon Triggered on Load */}
-      <ConfettiCannon count={300} origin={{ x: 0, y: 0 }} fadeOut={true} />
+      <ConfettiCannon
+        count={300}
+        explosionSpeed={1000}
+        fallSpeed={5000}
+        origin={{ x: 0, y: 0 }}
+        fadeOut={true}
+      />
 
       <View className="w-full min-h-screen flex justify-around items-center p-4">
         <View />
@@ -25,7 +31,11 @@ export default function EndScreen() {
 
         <Button
           title="Check the Monument"
-          onPress={() => navigation.navigate("HomeScreen")}
+          onPress={() =>
+            navigation.navigate("MonumentInfoScreen", {
+              name: route.params.name,
+            })
+          }
           bgColor="#0aa812"
         />
       </View>

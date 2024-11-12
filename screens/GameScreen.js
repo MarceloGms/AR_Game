@@ -101,18 +101,26 @@ export default function GameScreen({ route }) {
     }
   };
 
-  // Function to distribute the checkpoints
+  // Função para distribuir os checkpoints com letras aleatórias
   const distributeCheckpoints = (coords, name) => {
     const numCheckpoints = name.length;
     const interval = Math.floor((coords.length - 2) / (numCheckpoints - 2));
 
-    return name.split("").map((letter, index) => {
-      if (index === 0) {
-        // First checkpoint at the start of the route
+    // Embaralhar a ordem das letras
+    const shuffledIndices = Array.from(
+      { length: numCheckpoints },
+      (_, i) => i
+    ).sort(() => Math.random() - 0.5);
+
+    return shuffledIndices.map((index, i) => {
+      const letter = name[index];
+
+      if (i === 0) {
+        // Primeiro checkpoint no início da rota
         return { coordinate: coords[0], label: letter, completed: false };
       }
-      if (index === numCheckpoints - 1) {
-        // Last checkpoint at the end of the route (destination)
+      if (i === numCheckpoints - 1) {
+        // Último checkpoint no final da rota (destino)
         return {
           coordinate: coords[coords.length - 1],
           label: letter,
@@ -120,9 +128,9 @@ export default function GameScreen({ route }) {
         };
       }
 
-      // Intermediate checkpoints
+      // Checkpoints intermediários em posições aleatórias
       return {
-        coordinate: coords[index * interval],
+        coordinate: coords[i * interval],
         label: letter,
         completed: false,
       };

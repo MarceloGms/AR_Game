@@ -33,8 +33,8 @@ export default function MyMonuments() {
         <View>
           <SafeAreaView className="flex-1 justify-between min-h-screen items-start">
             <View className="gap-y-5 min-w-full">
-              <View className="flex justify-center items-center">
-                <Text className="text-3xl text-center text-[#f9a826b3] font-bold">
+              <View className="flex justify-center items-center py-4">
+                <Text className="text-4xl text-center text-[#f9a826b3] font-bold">
                   My Monuments
                 </Text>
               </View>
