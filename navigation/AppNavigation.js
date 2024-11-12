@@ -7,6 +7,7 @@ import MonumentInfoScreen from "../screens/MonumentInfoScreen";
 import StarterScreen from "../screens/StarterScreen";
 import GameScreen from "../screens/GameScreen";
 import ExerciseScreen from "../screens/ExerciseScreen";
+import EndScreen from "../screens/EndScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -14,13 +15,8 @@ export default function AppNavigation() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {/* <Stack.Screen
-          name="Login"
-          options={{ headerShown: false }}
-          component={LoginScreen}
-        /> */}
         <Stack.Screen
-          name="Home"
+          name="HomeScreen"
           options={{ headerShown: false }}
           component={HomeScreen}
         />
@@ -45,11 +41,15 @@ export default function AppNavigation() {
           component={GameScreen}
         />
         <Stack.Screen
-        name="ExerciseScreen"
-        options={{ headerShown: false }}
-        component={ExerciseScreen}
-        
-      />
+          name="ExerciseScreen"
+          options={{ headerShown: false }}
+          component={ExerciseScreen}
+        />
+        <Stack.Screen
+          name="EndScreen"
+          options={{ headerShown: false }}
+          component={EndScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

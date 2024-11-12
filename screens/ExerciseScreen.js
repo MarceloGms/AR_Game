@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, SafeAreaView, View } from "react-native";
 import { Video } from "expo-av";
 import { useNavigation } from "@react-navigation/native";
@@ -10,6 +10,7 @@ export default function ExerciseScreen({ route }) {
   const [challengeStarted, setChallengeStarted] = useState(false);
   const [timerFinished, setTimerFinished] = useState(false); // Track if timer is finished
   const [isCompleted, setIsCompleted] = useState(false);
+  const [lastCheckpoint, setLastCheckpoint] = useState(false);
   const navigation = useNavigation();
 
   const startChallenge = () => {
@@ -18,15 +19,36 @@ export default function ExerciseScreen({ route }) {
 
   const handleCompleteExercise = () => {
     setIsCompleted(true);
-    // Go back to the GameScreen and pass data to mark the checkpoint as completed
-    // Navigate back to the GameScreen after the challenge is done
-    navigation.navigate("GameScreen", {
-      name: route.params.monumentName, // Pass the monument name to the GameScreen
-      latitude: route.params.latitude,
-      longitude: route.params.longitude,
-      isCompleted: true, // Pass isCompleted
-    });
+
+    if (lastCheckpoint) {
+      navigation.navigate("EndScreen"); // Navigate to EndScreen if this is the last checkpoint
+    } else {
+      // Otherwise, navigate back to the GameScreen
+      navigation.navigate("GameScreen", {
+        name: route.params.monumentName, // Pass the monument name to the GameScreen
+        latitude: route.params.latitude,
+        longitude: route.params.longitude,
+        isCompleted: true, // Pass isCompleted
+      });
+    }
   };
+
+  // Check if it's the last checkpoint only after timer finishes
+  useEffect(() => {
+    if (timerFinished) {
+      const completedCheckpoints = route.params.completedCheckpoints;
+      const checkpoints = route.params.checkpoints;
+      const nextCheckpointIndex = completedCheckpoints.length;
+
+      if (nextCheckpointIndex === checkpoints.length - 1) {
+        setLastCheckpoint(true);
+      }
+    }
+  }, [
+    route.params.completedCheckpoints,
+    route.params.checkpoints,
+    timerFinished,
+  ]);
 
   return (
     <SafeAreaView className="flex-1 items-center justify-center bg-white p-6">
@@ -53,14 +75,21 @@ export default function ExerciseScreen({ route }) {
         />
       ) : null}
 
-      {/* Show "Voltar ao Mapa" button when the timer is finished */}
-      {timerFinished && (
-        <Button
-          title="Voltar ao Mapa"
-          onPress={handleCompleteExercise}
-          bgColor="#f9a826b3"
-        />
-      )}
+      {/* Conditional Rendering for Buttons after timer finishes */}
+      {timerFinished &&
+        (lastCheckpoint ? (
+          <Button
+            title="Finish Game"
+            onPress={handleCompleteExercise}
+            bgColor="#0aa812"
+          />
+        ) : (
+          <Button
+            title="Voltar ao Mapa"
+            onPress={handleCompleteExercise}
+            bgColor="#f9a826b3"
+          />
+        ))}
 
       {/* Show Start Challenge button if challenge isn't started */}
       {!challengeStarted && (

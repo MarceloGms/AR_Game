@@ -131,6 +131,7 @@ export default function GameScreen({ route }) {
 
   // Function to mark a checkpoint as completed
   const markCheckpointAsCompleted = (checkpoint) => {
+    console.log("Checkpoint completed:", completedCheckpoints);
     //verify if its the next checkpoint after the last completed
     const nextCheckpointIndex = completedCheckpoints.length;
     if (checkpoints[nextCheckpointIndex]?.label === checkpoint.label) {
@@ -181,7 +182,9 @@ export default function GameScreen({ route }) {
                     markCheckpointAsCompleted(checkpoint);
                     navigation.navigate("ExerciseScreen", {
                       checkpointCoordinate: checkpoint.coordinate,
-                      monumentName: monumentName,
+                      monumentName,
+                      completedCheckpoints,
+                      checkpoints,
                       checkpointIndex: checkpoint.label, // Pass checkpoint label to identify which one
                     });
                   }
