@@ -21,7 +21,6 @@ export default function GameScreen({ route }) {
 
   let monumentName = route.params.name;
   monumentName = monumentName.replace(/\s/g, "").toLowerCase();
-  console.log("MONUMENT NAME ", monumentName);
 
   useEffect(() => {
     let locationSubscription;
@@ -29,7 +28,6 @@ export default function GameScreen({ route }) {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        console.log("Permission to access location was denied");
         return;
       }
 
@@ -138,7 +136,6 @@ export default function GameScreen({ route }) {
 
   // Function to mark a checkpoint as completed
   const markCheckpointAsCompleted = (checkpoint) => {
-    console.log("Checkpoint completed:", completedCheckpoints);
     //verify if its the next checkpoint after the last completed
     const nextCheckpointIndex = completedCheckpoints.length;
     if (checkpoints[nextCheckpointIndex]?.label === checkpoint.label) {
