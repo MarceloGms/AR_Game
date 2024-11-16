@@ -19,6 +19,7 @@
     "expo-blur": "~13.0.2",
     "expo-location": "~17.0.1",
     "expo-status-bar": "~1.12.1",
+    "geolib": "^3.3.4",
     "ihc": "file:",
     "nativewind": "^2.0.11",
     "react": "18.2.0",

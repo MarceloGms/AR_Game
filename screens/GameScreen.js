@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { View, Dimensions, StyleSheet } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
+import { getDistance } from "geolib"; // calculate distance between two points
 import * as Location from "expo-location";
 import Svg, { Circle, Text } from "react-native-svg"; // Importação do SVG
 import BackButton from "../components/BackButton";
@@ -147,7 +148,7 @@ export default function GameScreen({ route }) {
   };
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1">
       {region && (
         <MapView
           style={styles.map}
@@ -177,12 +178,16 @@ export default function GameScreen({ route }) {
               completedCheckpoints.length ===
               checkpoints.findIndex((cp) => cp.label === checkpoint.label);
 
+            const isInRange =
+              location && getDistance(location, checkpoint.coordinate) <= 30; // Check if the user is within 30 meters of the checkpoint
+
             return (
               <Marker
                 key={`${checkpoint.coordinate.latitude}-${checkpoint.coordinate.longitude}`}
                 coordinate={checkpoint.coordinate}
                 onPress={() => {
                   if (!isCompleted && isNextCheckpoint) {
+                    // add  "&& isInRange" to the condition to enable the range check
                     markCheckpointAsCompleted(checkpoint);
                     navigation.navigate("ExerciseScreen", {
                       checkpointCoordinate: checkpoint.coordinate,
@@ -229,9 +234,6 @@ export default function GameScreen({ route }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   map: {
     ...StyleSheet.absoluteFillObject,
   },
