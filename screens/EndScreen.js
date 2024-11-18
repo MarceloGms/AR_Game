@@ -6,6 +6,7 @@ import ConfettiCannon from "react-native-confetti-cannon"; // Import confetti ca
 
 export default function EndScreen({ route }) {
   const navigation = useNavigation();
+  const { name, guesses } = route.params;
 
   return (
     <SafeAreaView className="flex-1 items-center justify-center bg-[#f9a826b3] p-6">
@@ -25,7 +26,7 @@ export default function EndScreen({ route }) {
             🎉 Congratulations! 🎉
           </Text>
           <Text className="text-2xl font-semibold text-center text-gray-700 mb-3">
-            You have successfully completed the game!
+              You completed the game in {guesses} attempts!
           </Text>
         </View>
 
