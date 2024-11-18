@@ -8,7 +8,7 @@ import {
   Button,
 } from "react-native";
 
-const Block = ({ index, guess, word, guessed }) => {
+const Block = ({ index, guess, word, guessed, isIncomplete }) => {
   const letter = guess[index];
   const wordLetter = word[index];
 
@@ -17,7 +17,10 @@ const Block = ({ index, guess, word, guessed }) => {
   ];
   const textStyles = ["text-xl font-bold text-zinc-800"];
 
-  if (letter === wordLetter && guessed) {
+  if (isIncomplete && !letter) {
+    blockStyles.push("bg-red-500 border-red-500");
+    textStyles.push("text-white");
+  } else if (letter === wordLetter && guessed) {
     blockStyles.push("bg-green-600 border-green-600");
     textStyles.push("text-white");
   } else if (word.includes(letter) && guessed) {
@@ -35,7 +38,7 @@ const Block = ({ index, guess, word, guessed }) => {
   );
 };
 
-const GuessRow = ({ guess, word, guessed }) => {
+const GuessRow = ({ guess, word, guessed, isIncomplete }) => {
   return (
     <View className="flex-row justify-center mt-4">
       {Array.from({ length: word.length }).map((_, index) => (
@@ -45,6 +48,7 @@ const GuessRow = ({ guess, word, guessed }) => {
           guess={guess}
           word={word}
           guessed={guessed}
+          isIncomplete={isIncomplete}
         />
       ))}
     </View>
@@ -87,6 +91,7 @@ export default function FindWordScreen({ route }) {
   const [gameComplete, setGameComplete] = useState(false);
   const [letters, setLetters] = useState([]);
   const [word, setWord] = useState("");
+  const [showMissingLetters, setShowMissingLetters] = useState(false); // Track incomplete guesses
 
   const completedCheckpoints = route.params.checkpoints;
 
@@ -106,10 +111,16 @@ export default function FindWordScreen({ route }) {
 
     const currentGuess = guesses[guesses.length - 1];
 
+    // Clear the "Missing Letters" state when starting a new attempt
+    if (showMissingLetters && letter !== "ENTER") {
+      setShowMissingLetters(false);
+    }
+
     // Handle Enter key to submit guess
     if (letter === "ENTER") {
       if (currentGuess.length !== word.length) {
-        alert("Word too short.");
+        setShowMissingLetters(true); // Show missing letters indication
+        setTimeout(() => setShowMissingLetters(false), 2000); // Hide after 2 seconds
         return;
       }
 
@@ -118,6 +129,7 @@ export default function FindWordScreen({ route }) {
         setGameComplete(true);
         navigation.navigate("EndScreen", {
           name: route.params.monumentName,
+          guesses: guesses.length,
         });
       }
 
@@ -154,6 +166,23 @@ export default function FindWordScreen({ route }) {
 
   return (
     <SafeAreaView className="flex-1 justify-between bg-yellow-500/80">
+      {/* Try Counter */}
+      <View className="pt-8 px-4">
+        <Text className="text-xl font-bold text-center">
+          Attempts: {guesses.length-1}
+        </Text>
+      </View>
+
+      {/* Missing Letters Label */}
+      {showMissingLetters && (
+          <View className="items-center">
+            <Text className="text-red-600 font-bold text-lg">
+              Missing letters! Fill all spaces.
+            </Text>
+          </View>
+      )}
+
+      {/* Guesses */}
       <View className="pt-8">
         {guesses.map((guess, index) => (
           <GuessRow
@@ -161,6 +190,7 @@ export default function FindWordScreen({ route }) {
             guess={guess}
             word={word}
             guessed={index < guesses.length - 1 || gameComplete}
+            isIncomplete={showMissingLetters && index === guesses.length - 1}
           />
         ))}
       </View>
