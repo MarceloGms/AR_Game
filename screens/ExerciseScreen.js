@@ -9,12 +9,12 @@ import Button from "../components/Button";
 
 const exercises = [
   {
-    name: "Jumping Jack",
+    name: "Aerobics",
     duration: 10,
     video: ex1,
   },
   {
-    name: "Squat",
+    name: "Knee To Elbow",
     duration: 10,
     video: ex2,
   },
@@ -26,10 +26,9 @@ export default function ExerciseScreen({ route }) {
   const [isCompleted, setIsCompleted] = useState(false);
   const [lastCheckpoint, setLastCheckpoint] = useState(false);
   const navigation = useNavigation();
-
-  //select a random exercise
-  const randomExercise =
-    exercises[Math.floor(Math.random() * exercises.length)];
+  const [randomExercise, setRandomExercise] = useState(
+    exercises[Math.floor(Math.random() * exercises.length)]
+  );
 
   const startChallenge = () => {
     setChallengeStarted(true);
@@ -87,17 +86,11 @@ export default function ExerciseScreen({ route }) {
           isLooping={true}
           style={{ width: "100%", height: "100%" }}
         />
-        {/* <Video
-					source={jumpingJack}
-					resizeMode="contain"
-					shouldPlay={true}
-					isLooping={true}
-					style={{ width: "100%", height: "100%" }}
-				/> */}
       </View>
 
       {challengeStarted && !timerFinished ? (
         <TimerBar
+          randomExercise
           onTimerEnd={() => {
             setTimerFinished(true); // Set timer finished state to true when timer ends
           }}
